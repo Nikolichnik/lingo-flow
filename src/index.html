@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>• LingoFlow •</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="resources/css/styles.css" />
+</head>
+
+<body>
+    <header>
+        <div class="logo">• LingoFlow •</div>
+        <div class="credits">
+            by <a href="https://github.com/Nikolichnik" target="_blank">Nikola Stojanović</a>, inspired by <a
+                href="https://www.youtube.com/@NaturalLanguageLearning" target="_blank">Mikel | Hyperpolyglot</a>
+        </div>
+        <div class="row" style="justify-content:flex-end; gap:10px;">
+            <button id="themeToggleBtn" class="pill" aria-pressed="true" title="Toggle light/dark">☀️ Light</button>
+            <button id="helpBtn" class="pill">🛟 Help</button>
+        </div>
+    </header>
+
+    <!-- Controls row: 3 panels -->
+    <section class="row cards-row sticky-tools">
+        <!-- 1) Load / Export -->
+        <div class="card grow" id="importCard" style="flex-grow: 0.5;">
+            <div class="card-header">Load / Export</div>
+
+            <div class="control-row">
+                <label class="pill nowrap" style="padding: 0; width: -webkit-fill-available;"">
+                    <input id="fileInput" type="file" accept=".csv" />
+                <span class="pill hidden" id="deckInfo">No deck loaded</span>
+                </label>
+            </div>
+
+            <div class="button-row">
+                <button id="exportBtn" class="pill primary" disabled>Export deck</button>
+            </div>
+        </div>
+
+        <!-- 2) Playback -->
+        <div class="card grow" id="playbackCard">
+            <div class="card-header">Playback</div>
+
+            <div class="control-row">
+                <label class="pill nowrap" style="max-width: 200px; overflow: hidden;">
+                    <span class="muted">Voice</span>
+                    <select id="voiceSel"></select>
+                </label>
+
+                <div class="pill slider nowrap">
+                    <span>Speed</span>
+                    <input type="range" id="rate" min="0.1" max="2" step="0.1" value="0.5" />
+                    <span id="rateVal">0.5×</span>
+                </div>
+
+                <div class="pill slider nowrap">
+                    <span>Volume</span>
+                    <input type="range" id="vol" min="0" max="1" step="0.01" value="1" />
+                    <span id="volVal">100%</span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="control-row">
+                    <label class="pill"><input type="checkbox" id="loopChk" />Loop</label>
+                    <label class="pill"><input type="checkbox" id="shuffleChk" />Shuffle</label>
+                    <label class="pill"><input type="checkbox" id="speakWordsChk" checked />Words</label>
+                    <label class="pill"><input type="checkbox" id="speakExamplesChk" checked />Examples</label>
+                    <label class="pill"><input type="checkbox" id="speakTranslationsChk" />Include translations</label>
+                </div>
+
+                <div class="button-row" style="margin-left:auto;">
+                    <button id="playBtn" class="pill primary">▶ Auto-play</button>
+                    <button id="stopBtn" class="pill ghost" disabled>Stop</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3) Filters -->
+        <div class="card grow" id="filterCard" style="flex-grow: 0.5;">
+            <div class="card-header">Filters</div>
+
+            <div class="control-row">
+                <label class="pill nowrap" style="width:100%;">
+                    <span class="muted">Familiarity</span>
+                    <div class="double-slider">
+                        <span class="badge" id="minFamVal">0</span>
+                        <div class="range-wrap">
+                            <div class="range-track"></div>
+                            <div class="range-fill"></div>
+                            <input type="range" id="minFamSel" min="0" max="5" step="1" value="0"
+                                aria-label="Minimum familiarity" />
+                            <input type="range" id="maxFamSel" min="0" max="5" step="1" value="5"
+                                aria-label="Maximum familiarity" />
+                        </div>
+                        <span class="badge" id="maxFamVal">5</span>
+                    </div>
+                </label>
+            </div>
+
+            <div class="button-row">
+                <button id="applyFilterBtn" class="pill primary">Apply</button>
+            </div>
+        </div>
+    </section>
+
+    <div class="table-container">
+        <!-- Table -->
+        <table id="deckTbl" class="hidden" aria-live="polite">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Word</th>
+                    <th>Example</th>
+                    <th>Translation</th>
+                    <th>Example Translation</th>
+                    <th>Familiarity</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <div id="help-modal" class="bf-help-modal" aria-hidden="true" role="dialog" aria-modal="true">
+        <div class="bf-help-backdrop" data-help-close></div>
+        <div class="bf-help-panel" role="document" aria-labelledby="help-title">
+            <button class="bf-help-close" type="button" title="Close (Esc)" data-help-close>×</button>
+            <div id="help-content" class="bf-help-content"></div>
+        </div>
+    </div>
+
+    <script src="resources/js/app.js"></script>
+</body>
+
+</html>
