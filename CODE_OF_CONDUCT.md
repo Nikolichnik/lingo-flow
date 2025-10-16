@@ -8,17 +8,17 @@ We pledge to make participation in this project a harassment-free experience for
 
 Examples of positive behavior include:
 
-- Using welcoming and inclusive language
-- Being respectful of differing viewpoints
-- Accepting constructive criticism
-- Showing empathy towards others
+* Using welcoming and inclusive language
+* Being respectful of differing viewpoints
+* Accepting constructive criticism
+* Showing empathy towards others
 
 Unacceptable behavior includes:
 
-- Trolling, insulting/derogatory comments, personal or political attacks
-- Public or private harassment
-- Publishing others’ private information
-- Other conduct which could reasonably be considered inappropriate
+* Trolling, insulting/derogatory comments, personal or political attacks
+* Public or private harassment
+* Publishing others’ private information
+* Other conduct which could reasonably be considered inappropriate
 
 ## Our Responsibilities
 
