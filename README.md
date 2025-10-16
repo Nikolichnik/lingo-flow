@@ -42,7 +42,7 @@ Load a CSV of words/phrases + examples, then listen on loop with adjustable voic
 
 ## 🚀 Getting started
 
-1. **Clone** the repo or download the latest release ZIP archive.
+1. **Clone** the repo or download the [latest release](https://github.com/Nikolichnik/lingo-flow/releases) ZIP archive.
 2. Open the [main index file](src/index.html) directly in a modern browser. **That's it!**
 3. If you'd like to, you can also run a tiny static server and host it locally:
    * Python: `python3 -m http.server 5173`
