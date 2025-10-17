@@ -214,6 +214,27 @@ label {
   border: none;
 }
 
+label.pill.nowrap {
+  min-width: 0;
+}
+
+label.pill.nowrap select#voiceSel {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  -webkit-appearance: none;
+  appearance: none;
+  text-decoration: dashed;
+}
+
+label.pill.nowrap select {
+  max-width: 100%;
+}
+
 input[type="file"] {
   background: var(--chip);
   color: var(--muted);
