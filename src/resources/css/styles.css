@@ -11,7 +11,7 @@
   --shadow: #00000020;
   --star-color: #555;
   --slider-bg: #1f2330;
-  --table-highlight-row: #161820;
+  --highlight: #161820;
 }
 
 /* Light theme */
@@ -28,7 +28,7 @@ html[data-theme="light"] {
   --shadow: #00000010;
   --star-color: #e2e2e2;
   --slider-bg: #e4e7ef;
-  --table-highlight-row: #edf1f6;
+  --highlight: #edf1f6;
 }
 
 /* Base */
@@ -440,7 +440,7 @@ table tbody tr {
 
 table tbody tr:hover,
 table tbody tr.playing {
-  background-color: var(--table-highlight-row);
+  background-color: var(--highlight);
 }
 
 table tbody td {
@@ -502,7 +502,7 @@ table td.speaking {
   border-radius: 14px;
   background: var(--panel, #fff);
   color: var(--ink, #111);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, .35);
+  box-shadow: 0 12px 40px var(--shadow);
   overflow: auto;
 }
 
@@ -531,14 +531,14 @@ table td.speaking {
 }
 
 .bf-help-content pre {
-  background: rgba(127, 127, 127, .12);
   border-radius: 8px;
 }
 
 .bf-help-content code,
 .bf-help-content pre {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   padding: .25rem .5rem;
+  background: var(--highlight);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 
 .bf-help-content pre {

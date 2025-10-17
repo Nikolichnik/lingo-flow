@@ -94,10 +94,10 @@ Load a CSV of words/phrases + examples, then listen on loop with adjustable voic
 Example:
 
 ```csv
-word(s),example,translation,example_translation,familiarity
-sein,Ich bin müde.,to be,I am tired.,2
-haben,Wir haben Zeit.,to have,We have time.,1
-gehen,Er geht nach Hause.,to go,He goes home.,0
+word|example|translation|example_translation|familiarity
+sein|Ich bin müde.|to be|I am tired.|2
+haben|Wir haben Zeit.|to have|We have time.|1
+gehen|Er geht nach Hause.|to go|He goes home.|0
 ```
 
 Columns are matched by header name (case-insensitive, spaces/underscores tolerated).

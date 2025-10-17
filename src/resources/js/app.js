@@ -72,7 +72,7 @@ const HELP_HTML = `
     <h2>Quick start</h2>
     <ol>
       <li><strong>Load a CSV</strong> (Load/Export panel → <em>Choose file</em>).<br>
-          - Required columns: <code>word</code> (or <code>words</code>), <code>example</code>.<br>
+          - Required columns: <code>word</code>, <code>example</code>.<br>
           - Optional: <code>translation</code>, <code>example_translation</code>, <code>familiarity</code> (0-5).<br>
           - <strong>Example CSVs</strong> are available in the <code>/decks</code> folder.
       </li>
@@ -85,12 +85,12 @@ const HELP_HTML = `
 
     <h2>CSV format</h2>
     <pre><code>
-word,example,translation,example_translation,familiarity
-sein,Ich bin müde.,to be,I am tired.,2
-haben,Wir haben Zeit.,to have,We have time.,1
-gehen,Er geht nach Hause.,to go,He goes home.,0</code>
+word|example|translation|example_translation|familiarity
+sein|Ich bin müde.|to be|I am tired.|2
+haben|Wir haben Zeit.|to have|We have time.|1
+gehen|Er geht nach Hause.|to go|He goes home.|0</code>
     </pre>
-    <p><em>Note:</em> Column names are case-insensitive; extra columns are ignored.</p>
+    <p><em>Note:</em> In order to support rich examples, the CSV uses <code>|</code> (pipe) as the column separator instead of the more common comma. Column names are case-insensitive; extra columns are ignored.</p>
 
     <h2>Suggested study flow</h2>
     <ol>
@@ -135,8 +135,8 @@ gehen,Er geht nach Hause.,to go,He goes home.,0</code>
     <h2>Troubleshooting</h2>
     <ul>
       <li><strong>No speech / missing voices?</strong> Use a modern browser (Chrome/Edge/Safari) with Speech Synthesis. Voices come from your OS and may take a moment to appear.</li>
-      <li><strong>CSV won't load?</strong> Ensure headers include <code>word</code>/<code>words</code> and <code>example</code>. Optional fields are supported but not required.</li>
-      <li><strong>Privacy:</strong> Everything runs locally in your browser. Familiarity updates are written only when you <em>Export CSV</em>.</li>
+      <li><strong>CSV won't load?</strong> Ensure headers include <code>word</code> and <code>example</code>. Optional fields are supported but not required.</li>
+      <li><strong>Privacy:</strong> Everything runs locally in your browser. Familiarity updates are written only when you <em>Export deck</em>.</li>
     </ul>
 
     <p><strong>You've got this.</strong> Listen a lot, recall actively, and bridge to native content - tailor decks to verbs, nouns, phrases, or any mix that fits your goals.</p>
