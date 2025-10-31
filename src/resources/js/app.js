@@ -54,6 +54,7 @@ const minFamVal = qs('#minFamVal');
 const maxFamVal = qs('#maxFamVal');
 const helpModal   = document.getElementById('help-modal');
 const helpContent = document.getElementById('help-content');
+const helpTemplate = document.getElementById('help-template');
 
 /* ========= Defaults ========= */
 const DEFAULTS = {
@@ -62,87 +63,7 @@ const DEFAULTS = {
     voiceLocaleHint: 'de-DE',
     voiceNameHint: 'Anna',
 };
-
-const HELP_HTML = `
-  <article>
-    <h1 id="help-title">LingoFlow • Help</h1>
-    <p>A lightweight <strong>CSV → audio player</strong> for vocabulary study inspired by <a style="color: var(--accent)" href="https://www.youtube.com/@NaturalLanguageLearning" target="_blank">Mikel | Hyperpolyglot's YouTube channel</a>.</p>
-    <p>Load a deck, click any <em>Word</em> or <em>Example</em> to hear it, or use <em>Auto-play</em> for hands-free listening. Track progress with <em>Familiarity</em> ★ ratings and export your updated CSV anytime. Use it for the most frequent <strong>verbs, nouns, phrases, or any mix</strong> you want to learn.</p>
-
-    <h2>Quick start</h2>
-    <ol>
-      <li><strong>Load a CSV</strong> (Load/Export panel → <em>Choose file</em>).<br>
-          - Required columns: <code>word</code>, <code>example</code>.<br>
-          - Optional: <code>translation</code>, <code>example_translation</code>, <code>familiarity</code> (0-5).<br>
-          - <strong>Example CSVs</strong> are available in the <code>/decks</code> folder.
-      </li>
-      <li><strong>Playback</strong>: pick a <em>Voice</em>, adjust <em>Speed</em> and <em>Volume</em>, then toggle:
-          <em>Loop</em>, <em>Shuffle</em>, <em>Words</em>, <em>Examples</em>, <em>Include translations</em>. Click <strong>Auto-play</strong>.</li>
-      <li><strong>Study</strong>: click any <span style="color: var(--accent)">highlighted</span> <em>Word</em> or <em>Example</em> to hear it once; set ★ in the <em>Familiarity</em> column (0-5).</li>
-      <li><strong>Filter</strong>: use the <em>Familiarity</em> range slider, then <strong>Apply</strong> to focus on a band (e.g., 0-2).</li>
-      <li><strong>Export</strong>: <em>Export CSV</em> saves a copy with your current familiarity ratings (everything runs locally).</li>
-    </ol>
-
-    <h2>CSV format</h2>
-    <pre><code>
-word|example|translation|example_translation|familiarity
-sein|Ich bin müde.|to be|I am tired.|2
-haben|Wir haben Zeit.|to have|We have time.|1
-gehen|Er geht nach Hause.|to go|He goes home.|0</code>
-    </pre>
-    <p><em>Note:</em> In order to support rich examples, the CSV uses <code>|</code> (pipe) as the column separator instead of the more common comma. Column names are case-insensitive; extra columns are ignored.</p>
-
-    <h2>Suggested study flow</h2>
-    <ol>
-      <li><strong>Passive listening (background)</strong>: turn on <em>Auto-play</em> (optionally <em>Shuffle</em> + <em>Loop</em>) while commuting, walking, or doing chores.</li>
-      <li><strong>Active blocks</strong>:
-        <ul>
-          <li><strong>Round A - Listen while reading:</strong> follow each sentence as it's spoken; keep <em>Include translations</em> on so meaning is clear.</li>
-          <li><strong>Round B - Active recall:</strong> look at the <em>translation</em>, say the <em>target</em> sentence out loud from memory, then check. Expect mistakes - they're part of learning.</li>
-        </ul>
-        Alternate A → B → A across batches of 100-300 rows (or any size you like).
-      </li>
-      <li><strong>Bridge to native content:</strong> once deck items feel easy, alternate 5-20 minutes of your deck with 5-20 minutes of real podcasts/videos you enjoy. If it's overwhelming, jump back to the deck; repeat. As you improve, raise <em>Speed</em> (e.g., 1.25× → 1.5×) so authentic content feels easier.</li>
-      <li><strong>Mnemonics (optional):</strong> for hard items, invent quick sound-alike images/stories to link <em>sound ↔ meaning</em>.</li>
-    </ol>
-
-    <h2>7-day sprint (example)</h2>
-    <ul>
-      <li><strong>Daily passive:</strong> 60-120 min of Auto-play in the background.</li>
-      <li><strong>Daily focused:</strong> 2-3 × 25-min Pomodoros (Round A / Round B).</li>
-    </ul>
-    <table>
-      <thead><tr><th align="left">Day</th><th align="left">Focus</th></tr></thead>
-      <tbody>
-        <tr><td>1</td><td>Round A on rows 1-300 (listen while reading, translations on).</td></tr>
-        <tr><td>2</td><td>Round B on rows 1-300 (active recall).</td></tr>
-        <tr><td>3</td><td>Round A on rows 300-600.</td></tr>
-        <tr><td>4</td><td>Round B on rows 300-600.</td></tr>
-        <tr><td>5</td><td>Filter 0-2 and clean up weak items; update ★ ratings.</td></tr>
-        <tr><td>6</td><td>Alternate deck ↔ native audio (several cycles).</td></tr>
-        <tr><td>7</td><td>Increase Speed; continue alternating; Export CSV to save progress.</td></tr>
-      </tbody>
-    </table>
-
-    <h2>Tips</h2>
-    <ul>
-      <li><strong>Pick a matching voice</strong> (e.g., de-DE, fr-FR, es-MX) for the best TTS.</li>
-      <li><strong>Shuffle</strong> prevents memorising fixed order; <strong>Filter</strong> to focus on weak items (0-2).</li>
-      <li><strong>Speak out loud</strong> during recall - production solidifies memory.</li>
-      <li><strong>Short, frequent reps</strong> beat marathon sessions; export regularly to back up your ★ progress.</li>
-    </ul>
-
-    <h2>Troubleshooting</h2>
-    <ul>
-      <li><strong>No speech / missing voices?</strong> Use a modern browser (Chrome/Edge/Safari) with Speech Synthesis. Voices come from your OS and may take a moment to appear.</li>
-      <li><strong>CSV won't load?</strong> Ensure headers include <code>word</code> and <code>example</code>. Optional fields are supported but not required.</li>
-      <li><strong>Privacy:</strong> Everything runs locally in your browser. Familiarity updates are written only when you <em>Export deck</em>.</li>
-    </ul>
-
-    <p><strong>You've got this.</strong> Listen a lot, recall actively, and bridge to native content - tailor decks to verbs, nouns, phrases, or any mix that fits your goals.</p>
-  </article>
-`;
-
+ 
 let deck = [];
 let filteredIdx = [];
 let autoQueue = [];
@@ -150,14 +71,18 @@ let playing = false;
 let deckKey = 'default';
 
 function openHelp() {
-  helpContent.innerHTML = HELP_HTML;
+  if (!helpTemplate) return;
+  const fragment = helpTemplate.content.cloneNode(true);
+  helpContent.replaceChildren(fragment);
   helpModal.setAttribute('aria-hidden', 'false');
   helpModal.querySelector('.bf-help-close')?.focus();
 }
 
 function closeHelp() {
   helpModal.setAttribute('aria-hidden', 'true');
-  helpContent.innerHTML = '';
+  while (helpContent.firstChild) helpContent.removeChild(helpContent.firstChild);
+  const helpBtn = document.getElementById('helpBtn');
+  helpBtn?.focus();
 }
 
 function updateRangeFill(el) {
