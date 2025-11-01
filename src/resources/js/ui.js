@@ -23,6 +23,11 @@ function updateRangeFill(el) {
     const min = Number(el.min || 0);
     const max = Number(el.max || 100);
     const val = Number(el.value || 0);
+    if (max === min) {
+        // Avoid division by zero; set to 0% or a default value
+        el.style.setProperty('--fill', `0%`);
+        return;
+    }
     const pct = ((val - min) * 100) / (max - min);
     el.style.setProperty('--fill', `${pct}%`);
 }
