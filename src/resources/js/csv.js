@@ -41,7 +41,7 @@ function exportDeckToBlob(deck, deckKey, getFam) {
         .map(r => r.map(cell => {
             if (cell == null) cell = '';
             const s = String(cell);
-            return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+            return /[",\n|]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
         }).join(','))
         .join('\n');
 
