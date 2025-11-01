@@ -2,7 +2,9 @@ const DEFAULTS = {
     rate: 1.0,
     volume: 1.0,
     voiceLocaleHint: 'de-DE',
-    voiceNameHint: 'Anna'
+    voiceNameHint: 'Anna',
+    translationVoiceNameHint: ['Google US English', 'Samantha'],
+    translationVoiceLocaleHint: 'en'
 };
 
 function initializeSpeech({ voiceSelect, rateInput, volumeInput, defaults = DEFAULTS }) {
@@ -52,13 +54,50 @@ function initializeSpeech({ voiceSelect, rateInput, volumeInput, defaults = DEFA
         synth.onvoiceschanged = loadVoices;
     }
 
-    function speak(text) {
+    function getSelectedVoice() {
+        const index = Number(voiceSelect?.value ?? 0);
+        return voices[index] || null;
+    }
+
+    function toArray(val) {
+        if (!val) return [];
+        return Array.isArray(val) ? val : [val];
+    }
+
+    function findVoiceByNameFragment(fragment) {
+        const needle = (fragment || '').toLowerCase();
+        if (!needle) return null;
+        return voices.find(v => (v.name || '').toLowerCase().includes(needle)) || null;
+    }
+
+    function findVoiceByLangPrefix(prefix) {
+        const target = (prefix || '').toLowerCase();
+        if (!target) return null;
+        return voices.find(v => (v.lang || '').toLowerCase().startsWith(target)) || null;
+    }
+
+    function getTranslationVoice() {
+        const current = getSelectedVoice();
+        if (current?.lang?.toLowerCase().startsWith('en')) return current;
+        for (const nameHint of toArray(opts.translationVoiceNameHint)) {
+            const byName = findVoiceByNameFragment(nameHint);
+            if (byName) return byName;
+        }
+        for (const localeHint of toArray(opts.translationVoiceLocaleHint)) {
+            const byLocale = findVoiceByLangPrefix(localeHint);
+            if (byLocale) return byLocale;
+        }
+        return current;
+    }
+
+    function speak(text, voiceOverride) {
         if (!text || !text.trim()) return Promise.resolve();
         const utterance = new SpeechSynthesisUtterance(text);
         if (rateInput) utterance.rate = Number(rateInput.value);
         if (volumeInput) utterance.volume = Number(volumeInput.value);
-        const voice = voices[voiceSelect?.value | 0];
+        const voice = voiceOverride || getSelectedVoice();
         if (voice) utterance.voice = voice;
+        if (voice?.lang) utterance.lang = voice.lang;
         return new Promise(res => {
             utterance.onend = res; utterance.onerror = res;
             synth.speak(utterance);
@@ -67,17 +106,23 @@ function initializeSpeech({ voiceSelect, rateInput, volumeInput, defaults = DEFA
 
     async function speakRow(row, field, { includeTranslations } = {}) {
         if (!row) return;
-        const seq = [];
+        const baseVoice = getSelectedVoice();
+        const translationVoice = includeTranslations ? getTranslationVoice() : baseVoice;
+        const sequence = [];
 
-        if (field === 'word') seq.push(row.word);
-        if (field === 'example') seq.push(row.example);
+        if (field === 'word' && row.word) sequence.push({ text: row.word, voice: baseVoice });
+        if (field === 'example' && row.example) sequence.push({ text: row.example, voice: baseVoice });
 
         if (includeTranslations) {
-            if (field === 'word' && row.translation) seq.push(row.translation);
-            if (field === 'example' && row.example_translation) seq.push(row.example_translation);
+            if (field === 'word' && row.translation) {
+                sequence.push({ text: row.translation, voice: translationVoice });
+            }
+            if (field === 'example' && row.example_translation) {
+                sequence.push({ text: row.example_translation, voice: translationVoice });
+            }
         }
 
-        for (const part of seq) await speak(part);
+        for (const part of sequence) await speak(part.text, part.voice);
     }
 
     function cancel() {
