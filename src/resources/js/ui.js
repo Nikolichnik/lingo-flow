@@ -125,6 +125,7 @@ function bootstrap({ deckStore, csv, initializeSpeech }) {
     const minFamVal = qs('#minFamVal');
     const maxFamVal = qs('#maxFamVal');
     const sortButtons = qsa('#deckTbl thead .sort-btn');
+    const tableContainer = qs('.table-container');
 
     if (!table || !tbody || !exportBtn || !fileInput || !deckStore || !minSel || !maxSel) return;
 
@@ -229,6 +230,15 @@ function bootstrap({ deckStore, csv, initializeSpeech }) {
         rowEl?.classList.remove('playing');
     }
 
+    function scrollRowIntoView(rowEl) {
+        if (!rowEl || !tableContainer) return;
+        const containerRect = tableContainer.getBoundingClientRect();
+        const rowRect = rowEl.getBoundingClientRect();
+        const offset = rowRect.top - containerRect.top;
+        const target = tableContainer.scrollTop + offset - (tableContainer.clientHeight / 2) + (rowEl.offsetHeight / 2);
+        tableContainer.scrollTo({ top: target });
+    }
+
     async function handleSpeakCell(i, field) {
         const row = deckStore.getRow(i);
         if (!row) return;
@@ -273,7 +283,8 @@ function bootstrap({ deckStore, csv, initializeSpeech }) {
 
                 const rowEl = tbody.querySelector(`tr[data-i="${i}"]`);
                 rowEl?.classList.add('playing');
-                await speechService.speakRow(deckStore.getRow(i), field, { includeTranslations: speakTranslationsChk?.checked });
+                scrollRowIntoView(rowEl);
+                await handleSpeakCell(i, field);
 
                 const pauseValue = 600 / (Number(rate?.value) || 1);
                 await new Promise(res => setTimeout(res, pauseValue));
