@@ -124,6 +124,7 @@ function bootstrap({ deckStore, csv, initializeSpeech }) {
     const fileInput = qs('#fileInput');
     const minFamVal = qs('#minFamVal');
     const maxFamVal = qs('#maxFamVal');
+    const sortButtons = qsa('#deckTbl thead .sort-btn');
 
     if (!table || !tbody || !exportBtn || !fileInput || !deckStore || !minSel || !maxSel) return;
 
@@ -131,6 +132,43 @@ function bootstrap({ deckStore, csv, initializeSpeech }) {
 
     let playing = false;
     let autoQueue = [];
+    let sortState = { column: 'ordinal', direction: 'asc' };
+
+    function getFamValue(row) {
+        if (!row) return 0;
+        return deckStore.getFam(row._id, row.familiarity);
+    }
+
+    function applySort(indices, deck) {
+        if (!Array.isArray(indices)) return [];
+        const dir = sortState.direction === 'asc' ? 1 : -1;
+        const sorted = [...indices];
+
+        if (sortState.column === 'familiarity') {
+            sorted.sort((a, b) => {
+                const rowA = deck[a];
+                const rowB = deck[b];
+                const famA = getFamValue(rowA);
+                const famB = getFamValue(rowB);
+                if (famA === famB) return (a - b) * dir;
+                return (famA - famB) * dir;
+            });
+        } else {
+            sorted.sort((a, b) => (a - b) * dir);
+        }
+
+        return sorted;
+    }
+
+    function updateSortIndicators() {
+        sortButtons.forEach(btn => {
+            const isActive = btn.dataset.sort === sortState.column;
+            btn.dataset.dir = isActive ? sortState.direction : '';
+            btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+            const th = btn.closest('th');
+            if (th) th.setAttribute('aria-sort', isActive ? (sortState.direction === 'asc' ? 'ascending' : 'descending') : 'none');
+        });
+    }
 
     function renderTable() {
         if (!tbody) return;
@@ -139,23 +177,30 @@ function bootstrap({ deckStore, csv, initializeSpeech }) {
         const indices = deckStore.filterByFamiliarity(minSel.value, maxSel.value);
         const deck = deckStore.getDeck();
 
-        indices.forEach((di, ix) => {
+        const sortedIndices = applySort(indices, deck);
+        if (deckStore.setFilteredOrder) deckStore.setFilteredOrder(sortedIndices);
+
+        sortedIndices.forEach((di) => {
             const r = deck[di];
             const tr = document.createElement('tr');
             tr.dataset.i = String(di);
+            const ordinal = r?._id ?? di + 1;
+            const famValue = getFamValue(r);
             tr.innerHTML = `
-      <td class="muted">${ix + 1}</td>
+      <td class="muted" data-col="ordinal">${ordinal}</td>
       <td class="speak" data-i="${di}" data-field="word">${escapeHtml(r.word)}</td>
       <td class="speak" data-i="${di}" data-field="example">${escapeHtml(r.example)}</td>
       <td class="muted">${escapeHtml(r.translation)}</td>
       <td class="muted">${escapeHtml(r.example_translation)}</td>
-      <td>${starHtml(deckStore.getFam(r._id, r.familiarity), di)}</td>
+      <td data-col="familiarity">${starHtml(famValue, di)}</td>
     `;
             tbody.appendChild(tr);
         });
 
-        table.classList.toggle('hidden', indices.length === 0);
+        table.classList.toggle('hidden', sortedIndices.length === 0);
         exportBtn.disabled = deck.length === 0;
+
+        updateSortIndicators();
 
         qsa('.speak').forEach(el => {
             el.addEventListener('click', () => {
@@ -273,9 +318,10 @@ function bootstrap({ deckStore, csv, initializeSpeech }) {
             const summary = `${f.name} • ${deck.length} rows`;
             deckInfo.textContent = summary;
             deckInfo.title = summary;
-            deckInfo.classList.remove('hidden');
+            deckInfo.classList.remove('placeholder');
         }
 
+        sortState = { column: 'ordinal', direction: 'asc' };
         minSel.value = '0';
         maxSel.value = '5';
         clampFamRange(minSel, maxSel, minFamVal, maxFamVal);
@@ -305,6 +351,21 @@ function bootstrap({ deckStore, csv, initializeSpeech }) {
     [minSel, maxSel].forEach(el => {
         el?.addEventListener('input', () => clampFamRange(minSel, maxSel, minFamVal, maxFamVal));
     });
+
+    sortButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const column = btn.dataset.sort;
+            if (!column) return;
+            if (sortState.column === column) {
+                sortState.direction = sortState.direction === 'asc' ? 'desc' : 'asc';
+            } else {
+                sortState = { column, direction: 'asc' };
+            }
+            renderTable();
+        });
+    });
+
+    updateSortIndicators();
 
     initThemeToggle();
     initHelpModal();

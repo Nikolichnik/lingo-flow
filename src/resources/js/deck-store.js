@@ -59,6 +59,11 @@ function createDeckStore(storage = window.localStorage) {
         return filteredIdx;
     }
 
+    function setFilteredOrder(order) {
+        if (!Array.isArray(order)) return;
+        filteredIdx = order.slice();
+    }
+
     function getRow(index) {
         return deck[index];
     }
@@ -123,7 +128,8 @@ function createDeckStore(storage = window.localStorage) {
         getFam,
         setFam,
         adjustFamiliarity,
-        buildDeckFromRows
+        buildDeckFromRows,
+        setFilteredOrder
     };
 }
 

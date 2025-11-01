@@ -34,7 +34,7 @@
                 <label class="file-picker pill" for="fileInput">
                     <input id="fileInput" type="file" accept=".csv" />
                     <span class="file-picker-button">Choose file</span>
-                    <span class="file-picker-summary hidden" id="deckInfo">No deck loaded</span>
+                    <span class="file-picker-summary placeholder" id="deckInfo">Load a CSV deck to get started</span>
                 </label>
             </div>
 
@@ -115,12 +115,16 @@
         <table id="deckTbl" class="hidden" aria-live="polite">
             <thead>
                 <tr>
-                    <th>#</th>
+                    <th id="col-ordinal">
+                        <button type="button" class="sort-btn" data-sort="ordinal" aria-label="Sort by number">#</button>
+                    </th>
                     <th>Word</th>
                     <th>Example</th>
                     <th>Translation</th>
                     <th>Example Translation</th>
-                    <th>Familiarity</th>
+                    <th id="col-familiarity">
+                        <button type="button" class="sort-btn" data-sort="familiarity">Familiarity</button>
+                    </th>
                 </tr>
             </thead>
             <tbody></tbody>
