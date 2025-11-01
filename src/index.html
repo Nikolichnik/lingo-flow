@@ -31,9 +31,10 @@
             <div class="card-header">Load / Export</div>
 
             <div class="control-row">
-                <label class="pill nowrap" style="padding: 0; width: -webkit-fill-available;"">
+                <label class="file-picker pill" for="fileInput">
                     <input id="fileInput" type="file" accept=".csv" />
-                <span class="pill hidden" id="deckInfo">No deck loaded</span>
+                    <span class="file-picker-button">Choose file</span>
+                    <span class="file-picker-summary placeholder" id="deckInfo">Load a CSV deck to get started</span>
                 </label>
             </div>
 
@@ -114,12 +115,16 @@
         <table id="deckTbl" class="hidden" aria-live="polite">
             <thead>
                 <tr>
-                    <th>#</th>
+                    <th id="col-ordinal">
+                        <button type="button" class="sort-btn" data-sort="ordinal" aria-label="Sort by number">#</button>
+                    </th>
                     <th>Word</th>
                     <th>Example</th>
                     <th>Translation</th>
                     <th>Example Translation</th>
-                    <th>Familiarity</th>
+                    <th id="col-familiarity">
+                        <button type="button" class="sort-btn" data-sort="familiarity">Familiarity</button>
+                    </th>
                 </tr>
             </thead>
             <tbody></tbody>
@@ -261,6 +266,10 @@ gehen|Er geht nach Hause.|to go|He goes home.|0</code></pre>
         </article>
     </template>
 
+    <script src="resources/js/csv.js"></script>
+    <script src="resources/js/deck-store.js"></script>
+    <script src="resources/js/speech.js"></script>
+    <script src="resources/js/ui.js"></script>
     <script src="resources/js/app.js"></script>
 </body>
 
