@@ -11,7 +11,22 @@ function initializeSpeech({ voiceSelect, rateInput, volumeInput, defaults = DEFA
     const opts = { ...DEFAULTS, ...defaults };
     const synth = window.speechSynthesis;
     if (!synth) {
-        alert('Your browser does not support Speech Synthesis (Web Speech API). Try Chrome/Edge/Safari.');
+        // Non-blocking notification: show a banner at the top of the page
+        if (typeof document !== 'undefined') {
+            const banner = document.createElement('div');
+            banner.textContent = 'Your browser does not support Speech Synthesis (Web Speech API). Try Chrome/Edge/Safari.';
+            banner.style.position = 'fixed';
+            banner.style.top = '0';
+            banner.style.left = '0';
+            banner.style.width = '100%';
+            banner.style.backgroundColor = '#ffdddd';
+            banner.style.color = '#900';
+            banner.style.padding = '12px';
+            banner.style.textAlign = 'center';
+            banner.style.zIndex = '10000';
+            banner.style.fontFamily = 'sans-serif';
+            document.body.appendChild(banner);
+        }
         return {
             speak: () => Promise.resolve(),
             speakRow: () => Promise.resolve(),
