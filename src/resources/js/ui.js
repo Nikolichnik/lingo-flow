@@ -270,7 +270,9 @@ function bootstrap({ deckStore, csv, initializeSpeech }) {
 
         deckStore.setDeck(deck, deckKey);
         if (deckInfo) {
-            deckInfo.textContent = `${f.name} • ${deck.length} rows`;
+            const summary = `${f.name} • ${deck.length} rows`;
+            deckInfo.textContent = summary;
+            deckInfo.title = summary;
             deckInfo.classList.remove('hidden');
         }
 
